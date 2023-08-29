@@ -1,0 +1,30 @@
+class Product:
+    delivery_charge = 50
+
+    def __init__(self, name="Teddy Bear", price=500):
+        self.name = name
+        self.price = price
+
+    def get_name(self):
+        return self.name
+
+    def get_price(self):
+        return self.price + Product.delivery_charge
+
+    def __str__(self):
+        return "The {} will cost you Rs.{}.".format(self.get_name(), self.get_price())
+
+
+class Gift(Product):
+    wrapping_charge = 100
+
+    def get_price(self):
+        return self.price + Product.delivery_charge + Gift.wrapping_charge
+
+
+# Example usage
+product1 = Product("Toy Car", 300)
+print(product1)
+
+gift1 = Gift("Lego Set", 800)
+print(gift1)
