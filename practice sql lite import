@@ -1,0 +1,35 @@
+import sqlite3
+
+try:
+    MySchool = sqlite3.connect('schooltest.db')
+    curschool = MySchool.cursor()
+    
+    nm = input("Enter name: ")
+    m = input("Enter new marks: ")
+    
+    # Check if input marks can be converted to a float
+    try:
+        m = float(m)
+    except ValueError:
+        print("Invalid marks input. Please enter a numeric value.")
+        MySchool.close()
+        exit()
+    
+    # Use a parameterized query to prevent SQL injection
+    sql_select = "SELECT * FROM student WHERE name = ?"
+    curschool.execute(sql_select, (nm,))
+    record = curschool.fetchone()
+    
+    if record:
+        sql_update = "UPDATE student SET marks = ? WHERE name = ?"
+        curschool.execute(sql_update, (m, nm))
+        MySchool.commit()
+        print("Record updated successfully")
+    else:
+        print("No record found for the given name")
+    
+    MySchool.close()
+except sqlite3.Error as e:
+    print("An error occurred:", e)
+    if 'MySchool' in locals():
+        MySchool.rollback()
