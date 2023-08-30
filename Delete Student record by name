@@ -1,0 +1,25 @@
+import sqlite3
+
+try:
+    MySchool = sqlite3.connect('schooltest.db')
+    curschool = MySchool.cursor()
+    
+    nm = input("Enter name of student to delete: ")
+    
+    sql_select = "SELECT * FROM student WHERE name = ?"
+    curschool.execute(sql_select, (nm,))
+    record = curschool.fetchone()
+    
+    if record:
+        sql_delete = "DELETE FROM student WHERE name = ?"
+        curschool.execute(sql_delete, (nm,))
+        MySchool.commit()
+        print("Record deleted successfully")
+    else:
+        print("No record found for the given name")
+    
+    MySchool.close()
+except sqlite3.Error as e:
+    print("An error occurred:", e)
+    if 'MySchool' in locals():
+        MySchool.rollback()
